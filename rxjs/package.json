@@ -1,0 +1,30 @@
+{
+  "name": "rxjs_demos",
+  "version": "1.0.0",
+  "description": "nothing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rxjs"
+  ],
+  "author": "wwz",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^5.0.2"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "html-webpack-plugin": "^2.24.1",
+    "webpack": "^2.2.0-rc.2",
+    "webpack-dev-middleware": "^1.9.0",
+    "webpack-dev-server": "^2.2.0-rc.0",
+    "webpack-hot-middleware": "^2.14.0"
+  }
+}
