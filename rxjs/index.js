@@ -4,13 +4,18 @@ import Rx from 'rxjs/Rx'
 
 const $input = document.querySelector('.rxjs-input1')
 const $btn = document.querySelector('.rxjs-btn1')
-const $btn2 = document.querySelector('.rxjs-btn-merge')
+const $input2 = document.querySelector('.rxjs-input2')
+const $input3 = document.querySelector('.rxjs-input3')
+const $btn2 = document.querySelector('.rxjs-btn2')
+const $btn3 = document.querySelector('.rxjs-btn-merge')
 
 const inputStream = Rx.Observable.fromEvent($input, 'input')
+const inputStream2 = Rx.Observable.fromEvent($input2, 'input')
+const inputStream3 = Rx.Observable.fromEvent($input3, 'input')
 
 const clickStream1 = Rx.Observable.fromEvent($btn, 'click')
-
 const clickStream2 = Rx.Observable.fromEvent($btn2, 'click')
+const clickStream3 = Rx.Observable.fromEvent($btn3, 'click')
 
 
 
@@ -39,21 +44,44 @@ inputStream
 	.map(e=>e.target.value)
 	.subscribe((x) => console.log('click throttle: click ' + x))
 
-const multiClickStream = clickStream2
-    .buffer(clickStream2.debounceTime(200))
-    .map(list => list.length)
-    .filter(x => x >= 2)
-multiClickStream.subscribe((x) => console.log('Throttle: click count ' + x + ' times'))
 
 // debounce、debounceTime 
 // 1. 接收一个observable后, 先缓存但不添加观察队列中，
 // 2. debounceTim内，如果有新的observable,则更新缓存值，继续第2个步骤；
 // 3. 如果没有新observable，则添加观察队列中
-inputStream
-	.debounce(e => Rx.Observable.interval(1000))
-	// .debounceTime(1000)
+inputStream2
+	.debounce(e => Rx.Observable.interval(300))
+	// .debounceTime(300)
 	.map(e=>e.target.value)
+	.distinctUntilChanged(x => x)
+	.filter(x => !!x)
 	.subscribe((x) => console.log('click debounce: click ' + x))
 
+const multiClickStream = clickStream3
+    .buffer(clickStream3.debounceTime(200))
+    .map(list => list.length)
+    .filter(x => x >= 2)
+multiClickStream.subscribe((x) => console.log('Throttle: click count ' + x + ' times'))
 
-
+// 搜索控件事例
+// 功能：在搜索框内，输入字符，并发起搜索（输入间隔不超过300ms时，不发起搜索）
+setTimeout(()=> console.log('－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－'), 2000)
+var searchSum = 0;
+inputStream3
+	.debounceTime(300)				// 间隔不超过300ms时，以最后的输入事件作为可观察对象
+	.map(e => e.target.value)		// 取输入结果
+	.distinctUntilChanged()			// 输入结果与上次的不同时触发
+	.filter(x => !!x)				// 过滤空的输入结果
+	.do(x => console.log('第' + searchSum + '次输入结果为: ' + x))
+	.switchMap(x => {
+		searchSum++
+		const delayTime = searchSum % 2 == 0 ? 1000 : 2000
+		const oPromise = new Promise((resolve, reject) => {
+			console.log('发起搜索：第' + searchSum + '次')
+			setTimeout(() => {
+				resolve('第' + searchSum + '次搜索结果为：' + x)
+			}, delayTime)
+		})
+		return Rx.Observable.fromPromise(oPromise)
+	})								// 取最新的搜索结果
+	.subscribe((x) => console.log('Search Demos Log: ' + x))
