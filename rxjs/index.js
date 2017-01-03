@@ -1,35 +1,18 @@
 console.log('hello rxjs!')
 
-import Rx from 'rxjs'
+import Rx from 'rxjs/Rx'
 
 const $input = document.querySelector('.rxjs-input1')
 const $btn = document.querySelector('.rxjs-btn1')
-const $btn_merge = document.querySelector('.rxjs-btn-merge')
+const $btn2 = document.querySelector('.rxjs-btn-merge')
 
-const inputStream = Rx.Observable.fromEvent($input, 'input').map(e => e.target.value)
+const inputStream = Rx.Observable.fromEvent($input, 'input')
 
-var sum = 0;
 const clickStream1 = Rx.Observable.fromEvent($btn, 'click')
-	.map(() => { 
-		sum++
-		return '第' + sum + '次点击提交：' 
-	})
 
-const clickStream2 = Rx.Observable.fromEvent($btn_merge, 'click')
+const clickStream2 = Rx.Observable.fromEvent($btn2, 'click')
 
-const combinedStream = clickStream1.combineLatest(
-	inputStream, (click, input)=>{
-		return click + input
-	}
-)
 
-inputStream.subscribe((x) => console.log('subscribe inputStream:' + x))
-
-combinedStream.subscribe(
-	(str) => { console.log('output subscribe: ' + str) },
-	(error) => { console.error(error) },
-	() => { console.log('completed!') }
-)
 
 // flatMap 由开始5开始，每次累加1，输出10个数
 Rx.Observable.range(5, 10).flatMap((item, index) => {
@@ -48,7 +31,29 @@ Rx.Observable.interval(200).map((index) => arrStream1[index])
 	.merge(Rx.Observable.interval(300).map((index) => arrStream2[index])).take(5)
 	.subscribe((x) => console.log(x))
 
-// throttle
-clickStream2
-	.map()
-	.subscribe((x) => console.log('click thottle: click ' + x + ' times'))
+// throttle、throttleTime  
+// 接收一个observable后，添加观察队列中，throttleTime内，不接受新的observable
+inputStream
+	.throttle(e => Rx.Observable.interval(1000))
+	// .throttleTime(1000)
+	.map(e=>e.target.value)
+	.subscribe((x) => console.log('click throttle: click ' + x))
+
+const multiClickStream = clickStream2
+    .buffer(clickStream2.debounceTime(200))
+    .map(list => list.length)
+    .filter(x => x >= 2)
+multiClickStream.subscribe((x) => console.log('Throttle: click count ' + x + ' times'))
+
+// debounce、debounceTime 
+// 1. 接收一个observable后, 先缓存但不添加观察队列中，
+// 2. debounceTim内，如果有新的observable,则更新缓存值，继续第2个步骤；
+// 3. 如果没有新observable，则添加观察队列中
+inputStream
+	.debounce(e => Rx.Observable.interval(1000))
+	// .debounceTime(1000)
+	.map(e=>e.target.value)
+	.subscribe((x) => console.log('click debounce: click ' + x))
+
+
+
