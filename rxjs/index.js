@@ -53,7 +53,7 @@ inputStream2
 	.debounce(e => Rx.Observable.interval(300))
 	// .debounceTime(300)
 	.map(e=>e.target.value)
-	.distinctUntilChanged(x => x)
+	.distinctUntilChanged()
 	.filter(x => !!x)
 	.subscribe((x) => console.log('click debounce: click ' + x))
 
