@@ -26,3 +26,15 @@ console.log(arr7, 'dropWhile:  Elements are dropped until predicate returns fals
 
 var arr8 = _.fill([1,2,3,4,5], '$', 3, 4)
 console.log(arr8, 'fill: _.fill(array, value, [start=0], [end=array.length])')
+
+var arr9 = _.fromPairs([['a', 1], ['b', 2]])
+console.log(arr9, 'fromPairs: 键值对的数组转为对象')
+
+var arr10 = _.head([5,2,4])
+console.log(arr10, 'head: return the first element of array')
+
+var arr11 = _.intersection([2, 1], [2, 3])
+console.log(arr11, 'intersection: Returns the new array of intersecting values， intersection 交叉点')
+
+var arr12 = _.nth([1,2,3,4,5], -2)
+console.log(arr12, 'nth: Returns the nth element of array.')
