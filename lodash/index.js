@@ -38,3 +38,6 @@ console.log(arr11, 'intersection: Returns the new array of intersecting values�
 
 var arr12 = _.nth([1,2,3,4,5], -2)
 console.log(arr12, 'nth: Returns the nth element of array.')
+
+
+// master commit: rebase - 1234567^……^
