@@ -41,3 +41,7 @@ console.log(arr12, 'nth: Returns the nth element of array.')
 
 
 // master commit: rebase - 1234567^……^
+
+console.log('-------')
+
+// dev commit: rebase - 01234 ^***^
