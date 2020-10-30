@@ -40,3 +40,7 @@ var arr12 = _.nth([1,2,3,4,5], -2)
 console.log(arr12, 'nth: Returns the nth element of array.')
 
 // git rebase: msg - 1234567890
+console.log(arr2, 'difference: 返回第一个数组中的第二个数组不包含的项')
+
+// git reabse: msg - 54321
+
